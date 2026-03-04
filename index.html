@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qibla Compass</title>
+
+<style>
+body{
+  margin:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background:#111;
+  color:white;
+  font-family:Arial;
+  flex-direction:column;
+}
+
+#compass{
+  width:250px;
+  height:250px;
+  border:6px solid white;
+  border-radius:50%;
+  position:relative;
+  transition:transform 0.1s linear;
+}
+
+#arrow{
+  width:4px;
+  height:120px;
+  background:red;
+  position:absolute;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+button{
+  margin-top:20px;
+  padding:10px 20px;
+  font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Qibla Compass</h2>
+
+<div id="compass">
+  <div id="arrow"></div>
+</div>
+
+<button onclick="startCompass()">Start Compass</button>
+
+<script>
+
+let compass = document.getElementById("compass");
+let qiblaAngle = 58; // example angle (you can change later)
+
+function startCompass(){
+
+  if (typeof DeviceOrientationEvent !== "undefined" &&
+      typeof DeviceOrientationEvent.requestPermission === "function") {
+
+    DeviceOrientationEvent.requestPermission()
+      .then(permissionState => {
+        if (permissionState === "granted") {
+          window.addEventListener("deviceorientation", handleOrientation);
+        }
+      })
+      .catch(console.error);
+
+  } else {
+    window.addEventListener("deviceorientation", handleOrientation);
+  }
+}
+
+function handleOrientation(event){
+  if(event.alpha !== null){
+    let heading = event.alpha;
+    let rotate = qiblaAngle - heading;
+    compass.style.transform = "rotate(" + rotate + "deg)";
+  }
+}
+
+</script>
+
+</body>
+</html>
